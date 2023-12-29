@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/db";
+import { initializeDb } from "@/db";
 
 // GET /api/password/:email
 export async function GET() {
+  const db = await initializeDb();
   try {
     const users = await db.query.usersTable.findMany({});
 

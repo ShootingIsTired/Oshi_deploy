@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/db";
+import { initializeDb } from "@/db";
 import { usersTable } from "@/db/schema";
 
 export const GET = async () => {
+  const db = await initializeDb();
   try {
     const deletedUsers = await db.delete(usersTable).returning();
     console.log("Deleted Users: ", deletedUsers);
