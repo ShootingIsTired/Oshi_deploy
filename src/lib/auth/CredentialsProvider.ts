@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { db } from "@/db";
+import { initializeDb } from "@/db";
 import { usersTable } from "@/db/schema";
 
 const authSchema = z.object({
@@ -33,7 +33,7 @@ export default CredentialsProvider({
       return null;
     }
     const { email, name, password } = validatedCredentials;
-
+    const db = await initializeDb();
     const [existedUser] = await db
       .select({
         id: usersTable.displayId,
@@ -81,9 +81,8 @@ export default CredentialsProvider({
       console.log("The email has registered with social account.");
       return null;
     }
-    // TODO: 2.2 Compare password with bcrypt
     const isValid = await bcrypt.compare(password, existedUser.hashedPassword);
-    // TODO: 2.2 end
+
 
     if (!isValid) {
       console.log("Wrong password. Try again.");

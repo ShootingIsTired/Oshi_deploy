@@ -1,16 +1,15 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq, desc, isNull, sql, like, and, } from "drizzle-orm";
+import { eq, desc, sql, like, and, } from "drizzle-orm";
 
 import { z } from "zod";
 
-import { db } from "@/db";
-import { usersTable, oshiInfoTable, keepTable, likeTable, picTable, commentTable, tagTable } from "@/db/schema";
+import  {initializeDb} from "@/db";
+import {  oshiInfoTable, keepTable, likeTable, picTable, commentTable, tagTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { publicEnv } from "@/lib/env/public";
-import type { User, OshiInfo, Keep, Like, Comment, Tag } from "@/lib/types";
+import type { User, OshiInfo} from "@/lib/types";
 
 const createOshiSchema = z.object({
   name: z.string().min(1).max(100),
@@ -22,6 +21,7 @@ const createOshiSchema = z.object({
 export async function addOshi(
   oshiData: Omit<OshiInfo, 'id'>
 ) {
+  const db = await initializeDb();
   // Check if user is logged in
   const session = await auth();
   const userId = session?.user?.id;
@@ -66,6 +66,7 @@ export async function addOshi(
 
 // Keep an oshi
 export async function keepOshi(userId: User['id'], oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   try {
     // Check if the user has already kept this oshi
     const existingKeeps = await db.query.keepTable.findMany({
@@ -93,6 +94,7 @@ export async function keepOshi(userId: User['id'], oshiId: OshiInfo['id']) {
 
 // Remove a kept oshi
 export async function removeKeepOshi(userId: User['id'], oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   // Delete the keep record for the given userId and oshiId
   await db.delete(keepTable)
     .where(and(eq(keepTable.userId, userId), eq(keepTable.oshiId, oshiId)))
@@ -101,6 +103,7 @@ export async function removeKeepOshi(userId: User['id'], oshiId: OshiInfo['id'])
 }
 
 export async function isOshiKeptByUser(userId: User['id'], oshiId: OshiInfo['id']): Promise<boolean> {
+  const db = await initializeDb();
   const existingKeeps = await db.query.keepTable.findMany({
     where: and(eq(keepTable.userId, userId), eq(keepTable.oshiId, oshiId)),
   });
@@ -111,6 +114,7 @@ export async function isOshiKeptByUser(userId: User['id'], oshiId: OshiInfo['id'
 
 // Like a pic
 export async function likePic(userId: User['id'], picId: string) {
+  const db = await initializeDb();
   // Insert a like into the likeTable
   const existingLike = await db.query.likeTable.findMany({
     where: and(eq(likeTable.userId, userId), eq(likeTable.picId, picId)),
@@ -130,6 +134,7 @@ export async function likePic(userId: User['id'], picId: string) {
 
 // Like a pic
 export async function unlikePic(userId: User['id'], picId: string) {
+  const db = await initializeDb();
   // Delete the like record for the given userId and picId
   await db.delete(likeTable)
     .where(and(eq(likeTable.userId, userId), eq(likeTable.picId, picId)))
@@ -137,7 +142,8 @@ export async function unlikePic(userId: User['id'], picId: string) {
 }
 
 export async function isPicLikedByUser(userId: User['id'], picId: string): Promise<boolean> {
-    try {
+  const db = await initializeDb();  
+  try {
         const likes = await db.query.likeTable.findMany({
             where: and(eq(likeTable.userId, userId), eq(likeTable.picId, picId)),
         });
@@ -154,6 +160,7 @@ export async function isPicLikedByUser(userId: User['id'], picId: string): Promi
 
 // Get the user's liked pics
 export async function getLikedPicsByUser(userId: User['id']) {
+  const db = await initializeDb();
   // Query the likeTable for this user's liked pics
   const likedPics = await db.query.likeTable.findMany({
     where: eq(likeTable.userId, userId),
@@ -178,6 +185,7 @@ export async function getLikedPicsByUser(userId: User['id']) {
 
 // Get the user's keeps
 export async function getKeepsByUser(userId: User['id']) {
+  const db = await initializeDb();
   // Query the keepTable for this user's keeps
   const keeps = await db.query.keepTable.findMany({
     where: eq(keepTable.userId, userId),
@@ -214,6 +222,7 @@ export async function getKeepsByUser(userId: User['id']) {
 
 // Get all the oshis
 export async function getAllOshis() {
+  const db = await initializeDb();
   // Query all oshi records from oshiInfoTable
   // findMany without any specific conditions will return all records from the table
   const oshis = await db.query.oshiInfoTable.findMany();
@@ -229,6 +238,7 @@ export async function getAllOshis() {
 
 // Get a single oshi by its display ID
 export async function getOshi(oshiDisplayId: OshiInfo['id']) {
+  const db = await initializeDb();
   // Query the oshiInfoTable for an oshi with the specified display ID
   const oshis = await db.query.oshiInfoTable.findMany({
     where: eq(oshiInfoTable.displayId, oshiDisplayId),
@@ -253,6 +263,7 @@ export async function getOshi(oshiDisplayId: OshiInfo['id']) {
 
 // Post a comment
 export async function postComment(userId: User['id'], oshiId: OshiInfo['id'], commentText: string) {
+  const db = await initializeDb();
   // Insert a comment into the commentTable
   await db.insert(commentTable).values({
     userId: userId,
@@ -263,6 +274,7 @@ export async function postComment(userId: User['id'], oshiId: OshiInfo['id'], co
   // You might want to handle errors or return the created comment
 }
 export async function getComments(oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   try {
     // Fetching comments for the given oshiId, sorted by timestamp
     const comments = await db.query.commentTable.findMany({
@@ -283,6 +295,7 @@ export async function getComments(oshiId: OshiInfo['id']) {
 
 // Add a tag to an oshi
 export async function addTagToOshi(oshiId: OshiInfo['id'], tagText: string) {
+  const db = await initializeDb();
   // Insert a tag into the tagTable
   await db.insert(tagTable).values({
     oshiId: oshiId,
@@ -291,6 +304,7 @@ export async function addTagToOshi(oshiId: OshiInfo['id'], tagText: string) {
 }
 
 export async function removeTagsFromOshi(oshiId: OshiInfo['id'], tag: string) {
+  const db = await initializeDb();
   try {
     // Delete the tag associated with the oshiId
     await db.delete(tagTable)
@@ -303,6 +317,7 @@ export async function removeTagsFromOshi(oshiId: OshiInfo['id'], tag: string) {
 }
 
 export async function getTagsByOshi(oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   // Query the tagTable for tags linked to the specified oshiId
   const tags = await db.query.tagTable.findMany({
     where: eq(tagTable.oshiId, oshiId),
@@ -326,6 +341,7 @@ interface PictureWithLikes {
 }
 
 export async function getOshiPicturesSortedByLikes(oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   const pictures = await db.query.picTable.findMany({
     where: eq(picTable.oshiId, oshiId),
   });
@@ -345,6 +361,7 @@ export async function getOshiPicturesSortedByLikes(oshiId: OshiInfo['id']) {
 }
 
 export async function getMostLikedOshiPicture(oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   const pictures = await db.query.picTable.findMany({
     where: eq(picTable.oshiId, oshiId),
   });
@@ -372,6 +389,7 @@ export async function getMostLikedOshiPicture(oshiId: OshiInfo['id']) {
 
 // Get a single oshi by its display ID
 export async function getMostKeepedOshiByCountry(country: string) {
+  const db = await initializeDb();
   const oshis = await db.query.oshiInfoTable.findMany({
     where: eq(oshiInfoTable.country, country),
   });
@@ -399,6 +417,7 @@ export async function getMostKeepedOshiByCountry(country: string) {
 
 // Get five most keeped oshis by country
 export async function getOshiRankingByCountry(country: string) {
+  const db = await initializeDb();
   const oshis = await db.query.oshiInfoTable.findMany({
     where: eq(oshiInfoTable.country, country),
   });
@@ -425,6 +444,7 @@ interface PictureData {
 
 // Add a new picture
 export async function addPicture(pictureData: PictureData) {
+  const db = await initializeDb();
   // Insert the new picture into the picTable
   const [addedPicture] = await db.insert(picTable).values({
     oshiId: pictureData.oshiId,
@@ -441,6 +461,7 @@ export async function addPicture(pictureData: PictureData) {
 
 //Count how many people kept the oshi with oshi id
 export async function countKeeps(oshiId: OshiInfo['id']) {
+  const db = await initializeDb();
   const keeps = await db.query.keepTable.findMany({
     where: eq(keepTable.oshiId, oshiId),
   });
@@ -448,6 +469,7 @@ export async function countKeeps(oshiId: OshiInfo['id']) {
 }
 
 export async function getOshisByTag(tag: string) {
+  const db = await initializeDb();
   const uppercaseTag = tag.toUpperCase();
   // Query the tagTable for oshis with the specified tag
   const oshis = await db.query.tagTable.findMany({
@@ -463,6 +485,7 @@ export async function getOshisByTag(tag: string) {
 
 // Get the total like count for a specific picture
 export async function getLikeCountByPic(picId: string) {
+  const db = await initializeDb();
   // Query the likeTable to count likes for the given picture ID
   const likeCount = await db.query.likeTable.findMany({
     where: eq(likeTable.picId, picId),
@@ -474,18 +497,21 @@ export async function getLikeCountByPic(picId: string) {
 // Functions for statistics
 // Function to count users
 export async function countUsers() {
+  const db = await initializeDb();
   const userCount = await db.query.usersTable.findMany();
   return userCount.length;
 }
 
 // Function to count oshis
 export async function countOshis() {
+  const db = await initializeDb();
   const oshiCount = await db.query.oshiInfoTable.findMany();
   return oshiCount.length;
 }
 
 // Function to count total pics
 export async function countPics() {
+  const db = await initializeDb();
   const picCount = await db.query.picTable.findMany();
   return picCount.length;
 }
@@ -497,6 +523,7 @@ interface TagWithCount {
 
 // // Function to get the 10 most appeared tags
 export async function getTopTags(limit = 10) {
+  const db = await initializeDb();
   const res = await db.select({
     tag: tagTable.tag,
     count: sql`COUNT(${tagTable.id})`,
