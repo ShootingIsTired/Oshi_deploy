@@ -11,7 +11,7 @@ type Props = {
     onKeep?: () => void;
 };
 
-export default function keepButton(props: Props) {
+export default function KeepButton(props: Props) {
     const { data: session } = useSession();
     const oshiId = props.oshiId;
     const [isKept, setIsKept] = useState(false);

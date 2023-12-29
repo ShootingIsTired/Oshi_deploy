@@ -65,28 +65,28 @@ export default async function Navbar() {
         <Link
           className="flex items-center justify-center w-full text-center rounded-xl bg-gray-50 px-4 py-2 text-lg drop-shadow-md transition-all hover:bg-gray-200"
           href="/oshi/explore">
-          <SearchIcon className="h-5 w-5 mr-2" /> 
+          <SearchIcon className="h-5 w-5 mr-2" />
           Explore
         </Link>
 
         <Link
           className="w-full text-center rounded-xl bg-gray-50 px-4 py-2 text-lg drop-shadow-md transition-all hover:bg-gray-200"
           href="/oshi/add">
-          <AddIcon className="h-5 w-5 mr-2" /> 
+          <AddIcon className="h-5 w-5 mr-2" />
           Add
         </Link>
-        
+
         <Link
           className="w-full text-center rounded-xl bg-gray-50 px-4 py-2 text-lg drop-shadow-md transition-all hover:bg-gray-200"
           href="/oshi/statistics">
-          <LeaderboardIcon className="h-5 w-5 mr-2" /> 
+          <LeaderboardIcon className="h-5 w-5 mr-2" />
           Statistics
         </Link>
 
         <Link
           className="w-full text-center rounded-xl bg-gray-50 px-4 py-2 text-lg drop-shadow-md transition-all hover:bg-gray-200"
           href="/oshi/report">
-          <ReportIcon className="h-5 w-5 mr-2" /> 
+          <ReportIcon className="h-5 w-5 mr-2" />
           Report
         </Link>
 
@@ -101,11 +101,9 @@ export default async function Navbar() {
             className="rounded-full" // To make the image round
           />
           <span className="text-md font-semibold">
-            {
-              // @ts-ignore
-              session.user.name
-            }
+            {session.user?.name ?? 'Guest'}
           </span>
+
         </div>
         <SignOutButton />
       </div>
