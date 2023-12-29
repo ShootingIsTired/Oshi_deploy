@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 import { getOshi } from "../actions";
 import { Separator } from "@/components/ui/separator";
-import { getTagsByOshi, getMostLikedOshiPicture } from "../actions";
+import {  getMostLikedOshiPicture } from "../actions";
 import AddTagForm from "./_components/addTagForm";
 import AddPicForm from "../_components/addPicForm";
-import KeepButton from "../_components/keepButton";
 import InstagramIcon from '@mui/icons-material/Instagram';
 import AddCommentForm from "./_components/addCommentForm";
 import KeepCount from "./_components/keepCount";
@@ -27,7 +26,6 @@ const countryFlags: CountryFlags = {
 
 export default async function OshiPage(props: Props) {
     const oshi = await getOshi(props.params.oshiId);
-    const tags = await getTagsByOshi(props.params.oshiId);
     const mostLikedPicture = await getMostLikedOshiPicture(props.params.oshiId);
     // const pictures = await getOshiPicturesSortedByLikes(props.params.oshiId);
     if (!oshi) {

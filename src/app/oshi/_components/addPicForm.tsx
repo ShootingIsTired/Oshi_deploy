@@ -63,8 +63,10 @@ export default function AddPicForm(props: Props) {
         }
         window.cloudinary.openUploadWidget(
             {
-                cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-                upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
+                // cloud_name: 'dtosgqqle',
+                // upload_preset: 'dzx7q9vm',
+                cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+                upload_preset: process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME,
                 cropping: true,               // Enable cropping
                 cropping_aspect_ratio: 1,     // Set aspect ratio to 1:1 for square
                 cropping_default_selection_ratio: 1, // Default selection ratio

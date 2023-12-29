@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { addTagToOshi } from "../../actions";
 import TagIcon from '@mui/icons-material/Tag';
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ export default function AddTagForm(props: Props) {
     const [oldTags, setOldTags] = useState<string[]>([]);
     const [newTags, setNewTags] = useState<string[]>([]);
     const [currentTag, setCurrentTag] = useState<string>("");
-    const router = useRouter();
     const { toast } = useToast();
     useEffect(() => {
         const fetchTags = async () => {
