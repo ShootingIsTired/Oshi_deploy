@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Image from "next/image"; // Import the Image component
-import { getKeepsByUser } from "../actions";
 import ReportIcon from '@mui/icons-material/Report';
 import { auth } from "@/lib/auth";
 import { publicEnv } from "@/lib/env/public";
@@ -20,7 +19,6 @@ export default async function Navbar() {
   if (!userId || !session?.user) {
     redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
   }
-  const projects = await getKeepsByUser(userId);
   return (
     <nav className="flex min-w-fit flex-col justify-between gap-2 overflow-hidden" style={{ backgroundColor: '#F3E1C1' }}>
       <div className="flex h-40 w-full flex-row items-center gap-5 px-3 py-2 pt-4 p-2">

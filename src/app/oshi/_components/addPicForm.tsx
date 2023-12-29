@@ -1,9 +1,31 @@
 "use client";
-declare global {
+interface CloudinaryWidgetOptions {
+    cloud_name: string | undefined;
+    upload_preset: string | undefined;
+    cropping?: boolean;
+    cropping_aspect_ratio?: number;
+    cropping_default_selection_ratio?: number;
+    cropping_show_dimensions?: boolean;
+    show_completed_button?: boolean;
+    show_cancel?: boolean;
+    theme?: string;
+    // Add other relevant options
+  }
+  
+  interface CloudinaryWidget {
+    openUploadWidget: (
+      options: CloudinaryWidgetOptions,
+      callback: (error: string, result: CloudinaryUploadResult) => void
+    ) => void;
+    // Add other relevant methods
+  }
+  
+  declare global {
     interface Window {
-        cloudinary: any;
+      cloudinary: CloudinaryWidget;
     }
-}
+  }
+  
 
 export { }; // This line is necessary if you're in a module scope
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -27,10 +49,18 @@ type Picture = {
     likeCount: number;
 };
 
+interface CloudinaryUploadResult {
+    event: string;
+    info: {
+        secure_url: string; // URL of the uploaded file
+        public_id: string; // Public ID of the file
+        // Add other fields based on Cloudinary's actual response
+    };
+}
+
 export default function AddPicForm(props: Props) {
     const oshiId = props.params.oshiId;
     const [pictures, setPictures] = useState<Picture[]>([]);
-    const [pictureUrl, setPictureUrl] = useState(null); // State to store the picture URL
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -75,7 +105,7 @@ export default function AddPicForm(props: Props) {
                 show_cancel: true,
                 theme: 'white',
             },
-            async (error: any, result: any) => {
+            async (error: string, result: CloudinaryUploadResult) => {
                 if (error) {
                     console.error('Upload error:', error);
                     return;
@@ -83,7 +113,7 @@ export default function AddPicForm(props: Props) {
                 if (result.event === 'success') {
                     props.onImageUpload? props.onImageUpload(result.info.secure_url) : null;
                     console.log('Upload result:', result.info.secure_url);
-                    setPictureUrl(result.info.secure_url);
+                    
                     try {
                         // Add the picture to the database
                         const newPictureData = await addPicture({
