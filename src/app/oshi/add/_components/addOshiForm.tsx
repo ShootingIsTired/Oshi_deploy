@@ -13,8 +13,15 @@ import type { OshiInfo } from "@/lib/types";
 import PublicIcon from '@mui/icons-material/Public';
 import LinkIcon from '@mui/icons-material/Link';
 import TagIcon from '@mui/icons-material/Tag';
-
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { publicEnv } from "@/lib/env/public";
 export default function AddOshiForm() {
+  const { data: session } = useSession();
+    const userId = session?.user?.id;
+    if (!userId || !session?.user) {
+        redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
+    }
   const [oshiName, setOshiName] = useState<OshiInfo["name"]>("");
   const [oshiCountry, setOshiCountry] = useState<OshiInfo["country"]>("Japan");
   const [oshiIgUrl, setOshiIgUrl] = useState<OshiInfo["igUrl"]>("");

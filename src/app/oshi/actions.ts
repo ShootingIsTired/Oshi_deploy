@@ -87,6 +87,7 @@ export async function keepOshi(userId: User['id'], oshiId: OshiInfo['id']) {
 
     return { message: "Oshi kept successfully." };
   } catch (error) {
+    console.error("Error in keeping oshi:", error);
     // Handle any errors here
     throw error; // or return a custom error message
   }
@@ -332,13 +333,6 @@ export async function getTagsByOshi(oshiId: OshiInfo['id']) {
   return tagList;
 }
 
-interface PictureWithLikes {
-  displayId: string;
-  imageUrl: string;
-  likes: {
-    like_count: number;
-  };
-}
 
 export async function getOshiPicturesSortedByLikes(oshiId: OshiInfo['id']) {
   const db = await initializeDb();

@@ -5,7 +5,6 @@ import { getKeepsByUser, removeKeepOshi} from "../../actions";
 import KeepButton from '../../_components/keepButton';
 import Link from 'next/link';
 import Image from 'next/image';
-
 // Define a new type that matches the structure we need
 type KeptOshi = {
     id: string;

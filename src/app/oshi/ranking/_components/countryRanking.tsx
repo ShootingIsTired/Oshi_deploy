@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { getOshiRankingByCountry } from "../../actions";
 import LinkPic from '../../_components/linkPic';
-
 type Oshi = {
     id: string;
     name: string;

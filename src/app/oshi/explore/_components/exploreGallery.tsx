@@ -5,13 +5,20 @@ import { getAllOshis, getOshisByTag } from '../../actions';
 import LinkPic from '../../_components/linkPic';
 import { Button } from "@/components/ui/button";
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { publicEnv } from "@/lib/env/public";
 type Oshi = {
     id: string;
     name: string;
     country: string;
 };
 const ExploreGallery = () => {
+    const { data: session } = useSession();
+    const userId = session?.user?.id;
+    if (!userId || !session?.user) {
+        redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
+    }
     const [oshis, setOshis] = useState<Oshi[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [countryFilters, setCountryFilters] = useState<string[]>([]);
@@ -22,39 +29,39 @@ const ExploreGallery = () => {
         const fetchOshis = async () => {
             const allOshis = await getAllOshis();
             setOshis(allOshis.oshis);
-            };
-            fetchOshis();
-        }, []);
-        
+        };
+        fetchOshis();
+    }, []);
+
     useEffect(() => {
-            applyFilters();
-        }, [oshis, searchTerm, countryFilters, tagSearchTerm]);
-        
+        applyFilters();
+    }, [oshis, searchTerm, countryFilters, tagSearchTerm]);
+
     const applyFilters = async () => {
         let oshisToDisplay = oshis;
-    
+
         // Apply name search filter
         if (searchTerm) {
-        oshisToDisplay = oshisToDisplay.filter(oshi =>
-            oshi.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+            oshisToDisplay = oshisToDisplay.filter(oshi =>
+                oshi.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
         }
-    
+
         // Apply country filter
         if (countryFilters.length > 0) {
-        oshisToDisplay = oshisToDisplay.filter(oshi =>
-            countryFilters.includes(oshi.country)
-        );
+            oshisToDisplay = oshisToDisplay.filter(oshi =>
+                countryFilters.includes(oshi.country)
+            );
         }
-    
+
         // Apply tag search filter
         if (tagSearchTerm) {
-        const oshiIdsByTag = await getOshisByTag(tagSearchTerm);
-        oshisToDisplay = oshisToDisplay.filter(oshi =>
-            oshiIdsByTag.includes(oshi.id)
-        );
+            const oshiIdsByTag = await getOshisByTag(tagSearchTerm);
+            oshisToDisplay = oshisToDisplay.filter(oshi =>
+                oshiIdsByTag.includes(oshi.id)
+            );
         }
-    
+
         setFilteredOshis(oshisToDisplay);
     };
 
@@ -144,20 +151,20 @@ const ExploreGallery = () => {
                         className={`px-3 py-1 rounded-md 
                         ${countryFilters.includes('Taiwan') ? 'bg-lime-700 text-white' : 'bg-gray-200'}`}>
                         Taiwan🇹🇼</button>
-                    <Button onClick={clearFilters} 
+                    <Button onClick={clearFilters}
                         className="submit-button h-10 text-center rounded-xl px-4 py-2 text-l drop-shadow-md transition-all bg-amber-500 hover:bg-amber-400">
-                        <FilterAltOffIcon className="h-5 w-5 mr-2"/>Clear Filter</Button>
+                        <FilterAltOffIcon className="h-5 w-5 mr-2" />Clear Filter</Button>
                 </div>
             </div>
-            
+
             {/* Gallery grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {filteredOshis.length > 0 ? (
-                filteredOshis.map(oshi => (
-                    <LinkPic key={oshi.id} oshiId={oshi.id} />
-                ))
+                    filteredOshis.map(oshi => (
+                        <LinkPic key={oshi.id} oshiId={oshi.id} />
+                    ))
                 ) : (
-                <p className="col-span-full text-center text-gray-600">No Results</p>
+                    <p className="col-span-full text-center text-gray-600">No Results</p>
                 )}
             </div>
         </div>
