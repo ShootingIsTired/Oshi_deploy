@@ -1,35 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PeopleIcon from '@mui/icons-material/People';
-import { addOshi, addTagToOshi, keepOshi } from "../../actions";
-import { Loader2 } from "lucide-react";
+import { addOshi, addTagToOshi } from "../../actions";
 import Face4Icon from '@mui/icons-material/Face4';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Option } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import type { OshiInfo } from "@/lib/types";
-import { redirect } from "next/navigation";
 import PublicIcon from '@mui/icons-material/Public';
-import { publicEnv } from "@/lib/env/public";
 import LinkIcon from '@mui/icons-material/Link';
 import TagIcon from '@mui/icons-material/Tag';
-import AddPicForm from "../../_components/addPicForm";
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+
 export default function AddOshiForm() {
   const [oshiName, setOshiName] = useState<OshiInfo["name"]>("");
   const [oshiCountry, setOshiCountry] = useState<OshiInfo["country"]>("Japan");
   const [oshiIgUrl, setOshiIgUrl] = useState<OshiInfo["igUrl"]>("");
   const [tags, setTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState<string>("");
-  const { data: session } = useSession();
-  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const handleAddTag = () => {
     if (currentTag && !tags.includes(currentTag.toUpperCase())) {
       setTags(prevTags => [...prevTags, currentTag.toUpperCase()]);

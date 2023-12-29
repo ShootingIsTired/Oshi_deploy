@@ -97,15 +97,6 @@ const ExploreGallery = () => {
         setFilteredOshis(oshisToDisplay);
     };
 
-    const filterByTag = async () => {
-        if (tagSearchTerm) {
-            const oshiIdsByTag = await getOshisByTag(tagSearchTerm);
-            setFilteredOshis(oshis.filter((oshi) => oshiIdsByTag.includes(oshi.id)));
-        } else {
-            filterOshis(); // If no tag is entered, apply other filters
-        }
-    };
-
     // Add a function to clear all filters
     const clearFilters = () => {
         setCountryFilters([]);

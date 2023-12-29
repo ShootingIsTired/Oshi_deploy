@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
-import { getKeepsByUser, getMostLikedOshiPicture, countKeeps, removeKeepOshi, getOshi } from "../../actions";
+import { getKeepsByUser, removeKeepOshi} from "../../actions";
 import KeepButton from '../../_components/keepButton';
-import { Pic, OshiInfo } from "@/lib/types";
 import Link from 'next/link';
 import Image from 'next/image';
 
