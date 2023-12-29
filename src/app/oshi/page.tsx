@@ -1,7 +1,5 @@
-import { getMostKeepedOshiByCountry, getMostLikedOshiPicture } from "./actions";
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import KeepButton from './_components/keepButton';
+import { getMostKeepedOshiByCountry } from "./actions";
+import React from 'react';
 import LinkPic from './_components/linkPic';
 
 type Oshi = {
