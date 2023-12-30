@@ -134,8 +134,6 @@ export const tagTable = pgTable(
   },
   (table) => ({
     // Indexes or unique constraints can be added here if needed
-    // This is a unique constraint on the combination of userId and documentId.
-    // This ensures that there is no duplicate entry in the table.
     oshiIdIndex: index("oshi_id_index").on(table.oshiId), // New index on oshiId
   }),
 );

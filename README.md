@@ -87,10 +87,11 @@ AUTH_SECRET=
 AUTH_GITHUB_ID=
 AUTH_GITHUB_SECRET=
 
+# See the following link to set up: https://developers.google.com/identity/protocols/oauth2
 GOOGLE_ID=
 GOOGLE_SECRET=
-# See the following link to set up: https://blog.stackademic.com/automate-200-emails-daily-nodemailer-next-js-13-integration-c7773ab63d5d
 
+# See the following link to set up: https://blog.stackademic.com/automate-200-emails-daily-nodemailer-next-js-13-integration-c7773ab63d5d
 EMAIL_USER=
 EMAIL_PASS=
 
