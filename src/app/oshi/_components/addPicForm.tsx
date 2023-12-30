@@ -85,7 +85,7 @@ export default function AddPicForm(props: Props) {
         return () => {
             document.body.removeChild(script);
         };
-    }, [oshiId]);
+    }, [props.params.oshiId]);
 
     const openCloudinaryWidget = useCallback(() => {
         if (typeof window.cloudinary === 'undefined') {
@@ -117,9 +117,9 @@ export default function AddPicForm(props: Props) {
                     
                     try {
                         // Add the picture to the database
-                        console.log("Current oshiId when adding data:", oshiId);
+                        console.log("Current oshiId when adding data:", props.params.oshiId);
                         const newPictureData = await addPicture({
-                            oshiId: oshiId,
+                            oshiId: props.params.oshiId,
                             imageUrl: result.info.secure_url,
                         });
 
@@ -131,7 +131,7 @@ export default function AddPicForm(props: Props) {
                 }
             }
         );
-    }, [oshiId]);
+    }, [props.params.oshiId]);
 
     return (
         <>

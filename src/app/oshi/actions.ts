@@ -5,11 +5,11 @@ import { eq, desc, sql, like, and, } from "drizzle-orm";
 
 import { z } from "zod";
 
-import  {initializeDb} from "@/db";
-import {  oshiInfoTable, keepTable, likeTable, picTable, commentTable, tagTable } from "@/db/schema";
+import { initializeDb } from "@/db";
+import { oshiInfoTable, keepTable, likeTable, picTable, commentTable, tagTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { publicEnv } from "@/lib/env/public";
-import type { User, OshiInfo} from "@/lib/types";
+import type { User, OshiInfo } from "@/lib/types";
 
 const createOshiSchema = z.object({
   name: z.string().min(1).max(100),
@@ -143,19 +143,19 @@ export async function unlikePic(userId: User['id'], picId: string) {
 }
 
 export async function isPicLikedByUser(userId: User['id'], picId: string): Promise<boolean> {
-  const db = await initializeDb();  
+  const db = await initializeDb();
   try {
-        const likes = await db.query.likeTable.findMany({
-            where: and(eq(likeTable.userId, userId), eq(likeTable.picId, picId)),
-        });
+    const likes = await db.query.likeTable.findMany({
+      where: and(eq(likeTable.userId, userId), eq(likeTable.picId, picId)),
+    });
 
-        // If the array is not empty, then the picture is liked by the user
-        return likes.length > 0;
-    } catch (error) {
-        // Handle any errors here
-        console.error('Error in checking if picture is liked by user:', error);
-        throw error; // or handle it as appropriate for your application
-    }
+    // If the array is not empty, then the picture is liked by the user
+    return likes.length > 0;
+  } catch (error) {
+    // Handle any errors here
+    console.error('Error in checking if picture is liked by user:', error);
+    throw error; // or handle it as appropriate for your application
+  }
 }
 
 
@@ -468,9 +468,9 @@ export async function getOshisByTag(tag: string) {
   // Query the tagTable for oshis with the specified tag
   const oshis = await db.query.tagTable.findMany({
     where: like(tagTable.tag, `%${uppercaseTag}%`),
-      columns: {
-          oshiId: true, // Retrieve only the oshi ID
-      },
+    columns: {
+      oshiId: true, // Retrieve only the oshi ID
+    },
   });
   //Extract the oshi ID from the query result
   const filteredOshiIds = oshis.map((item) => item.oshiId);
