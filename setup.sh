@@ -79,6 +79,6 @@ yarn playwright install-deps chromium
 print_boxed_string "CREATING ENV FILE..."
 # Create .env.local
 echo_yellow "Creating .env.local..."
-echo "POSTGRES_URL=postgres://postgres:postgres@localhost:5432/hack2
+echo "POSTGRES_URL=postgres://postgres:postgres@localhost:5433/oshi_deploy
 AUTH_SECRET=this_is_a_secret
 NEXT_PUBLIC_BASE_URL=http://localhost:3000" > /autograder/source/.env.local
