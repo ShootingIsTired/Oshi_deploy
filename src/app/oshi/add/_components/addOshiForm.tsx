@@ -13,15 +13,8 @@ import type { OshiInfo } from "@/lib/types";
 import PublicIcon from '@mui/icons-material/Public';
 import LinkIcon from '@mui/icons-material/Link';
 import TagIcon from '@mui/icons-material/Tag';
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { publicEnv } from "@/lib/env/public";
+
 export default function AddOshiForm() {
-  const { data: session } = useSession();
-    const userId = session?.user?.id;
-    if (!userId || !session?.user) {
-        redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
-    }
   const [oshiName, setOshiName] = useState<OshiInfo["name"]>("");
   const [oshiCountry, setOshiCountry] = useState<OshiInfo["country"]>("Japan");
   const [oshiIgUrl, setOshiIgUrl] = useState<OshiInfo["igUrl"]>("");
@@ -30,7 +23,7 @@ export default function AddOshiForm() {
   const handleAddTag = () => {
     if (currentTag && !tags.includes(currentTag.toUpperCase())) {
       setTags(prevTags => [...prevTags, currentTag.toUpperCase()]);
-       // Reset the input field after adding the tag
+      // Reset the input field after adding the tag
     }
     setCurrentTag("");
   };
@@ -95,35 +88,21 @@ export default function AddOshiForm() {
     console.log("oshiName", oshiName);
     console.log("oshiCountry", oshiCountry);
     console.log("oshiIgUrl", oshiIgUrl);
-    try {
-      // Adjusted to match the expected structure of oshiData
-      const newOshi = await addOshi({
-        name: oshiName,
-        country: oshiCountry,
-        igUrl: oshiIgUrl,
-      });
+
+    // Adjusted to match the expected structure of oshiData
+    const newOshi = await addOshi({
+      name: oshiName,
+      country: oshiCountry,
+      igUrl: oshiIgUrl,
+    });
 
 
-      for (const tag of tags) {
-        await addTagToOshi(newOshi.id, tag.toUpperCase());
-      }
-      // Redirect to the new oshi page (adjust the URL as needed)
-      router.push(`/oshi/${newOshi.id}`);
-    } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Something went wrong. Please try again later.",
-          variant: "destructive",
-        });
-      }
+    for (const tag of tags) {
+      await addTagToOshi(newOshi.id, tag.toUpperCase());
     }
+    // Redirect to the new oshi page (adjust the URL as needed)
+    router.push(`/oshi/${newOshi.id}`);
+
 
     setIsUploading(false);
     setOshiName("");
@@ -135,7 +114,7 @@ export default function AddOshiForm() {
     <>
       <div className="flex min-h-screen w-full flex-col gap-4 p-10 overflow-auto">
         <div className="rules-section bg-amber-100 p-4 rounded-lg mb-4 shadow-md">
-          <h2 className="text-xl font-semibold mb-2 text-red-800"><PeopleIcon className="mb-2 mr-1"/>  Community Guidelines</h2>
+          <h2 className="text-xl font-semibold mb-2 text-red-800"><PeopleIcon className="mb-2 mr-1" />  Community Guidelines</h2>
           <ul className="list-disc pl-5 text-gray-700 ml-2">
             <li>You can add any Oshi you like, but keep in mind that other users can report the content if they find it inappropriate.</li>
             <li>Ensure that the content you upload is respectful and does not violate any community standards.</li>

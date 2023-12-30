@@ -432,7 +432,7 @@ export async function getOshiRankingByCountry(country: string) {
 }
 // Define the structure of the picture data
 interface PictureData {
-  oshiId: OshiInfo['id'];
+  oshiId: string;
   imageUrl: string;
 }
 

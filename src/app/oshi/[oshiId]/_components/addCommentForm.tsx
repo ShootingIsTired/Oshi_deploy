@@ -1,8 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { publicEnv } from "@/lib/env/public";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,10 +14,6 @@ type Props = {
 export default function AddCommentForm(props: Props) {
     const oshiId = props.params.oshiId;
     const { data: session } = useSession();
-    const userId = session?.user?.id;
-    if (!userId || !session?.user) {
-        redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
-    }
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState('');
     const { toast } = useToast();

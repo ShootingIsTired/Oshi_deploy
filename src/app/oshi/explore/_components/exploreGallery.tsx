@@ -5,20 +5,12 @@ import { getAllOshis, getOshisByTag } from '../../actions';
 import LinkPic from '../../_components/linkPic';
 import { Button } from "@/components/ui/button";
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { publicEnv } from "@/lib/env/public";
 type Oshi = {
     id: string;
     name: string;
     country: string;
 };
 const ExploreGallery = () => {
-    const { data: session } = useSession();
-    const userId = session?.user?.id;
-    if (!userId || !session?.user) {
-        redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
-    }
     const [oshis, setOshis] = useState<Oshi[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [countryFilters, setCountryFilters] = useState<string[]>([]);

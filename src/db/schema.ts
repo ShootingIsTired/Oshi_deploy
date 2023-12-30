@@ -130,13 +130,12 @@ export const tagTable = pgTable(
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-    tag: varchar("tag", { length: 100 }).notNull().unique(),
+    tag: varchar("tag", { length: 100 }).notNull(),
   },
   (table) => ({
     // Indexes or unique constraints can be added here if needed
     // This is a unique constraint on the combination of userId and documentId.
     // This ensures that there is no duplicate entry in the table.
-    uniqCombination: unique().on(table.tag, table.oshiId),
     oshiIdIndex: index("oshi_id_index").on(table.oshiId), // New index on oshiId
   }),
 );

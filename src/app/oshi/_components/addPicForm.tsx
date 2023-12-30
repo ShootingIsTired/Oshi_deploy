@@ -60,6 +60,7 @@ interface CloudinaryUploadResult {
 
 export default function AddPicForm(props: Props) {
     const oshiId = props.params.oshiId;
+    console.log("Current oshiId:", oshiId);
     const [pictures, setPictures] = useState<Picture[]>([]);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -116,6 +117,7 @@ export default function AddPicForm(props: Props) {
                     
                     try {
                         // Add the picture to the database
+                        console.log("Current oshiId when adding data:", oshiId);
                         const newPictureData = await addPicture({
                             oshiId: oshiId,
                             imageUrl: result.info.secure_url,
