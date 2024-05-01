@@ -57,7 +57,7 @@ WP112-1 HW2 / HW3 / Hack2
 ## 使用之第三方套件、框架、程式碼
 - Frontend : NextJS, React, react-router-dom, Material UI, TypeScript
 - Backend : NextJS, Express, bcryptjs, Google Auth Library
-- Database : Neon DB
+- Database : Railway
 - 第三方 : NodeMailer, Cloudinary
 - Deployment : Vercel
 - 參考程式碼 : WP112-1 HW2 / HW3 / Hack2
